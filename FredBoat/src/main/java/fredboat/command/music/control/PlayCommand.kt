@@ -85,9 +85,9 @@ class PlayCommand(private val playerLimiter: PlayerLimiter, private val trackSea
             return
         }
 
-        var url = StringUtils.strip(context.args[0], "<>")
+        var url = StringUtils.strip(context.rawArgs)
         //Search youtube for videos and let the user select a video
-        if (!url.startsWith("http") && !url.startsWith(FILE_PREFIX)) {
+        if (!url.startsWith("http") && !url.startsWith(FILE_PREFIX) && !url.startsWith("botb ")) {
             searchForVideos(context)
             return
         }

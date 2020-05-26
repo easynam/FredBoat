@@ -61,7 +61,23 @@ public class BattleOfTheBitsAudioSourceManager implements AudioSourceManager, Ht
 
     @Override
     public AudioItem loadItem(DefaultAudioPlayerManager manager, AudioReference reference) {
-        return httpAudioSourceManager.loadItem(manager, processAsSingleTrack(reference.identifier));
+        String identifier = reference.identifier;
+
+        log.info("BOTB PLAYER identifier "+identifier);
+
+        AudioReference newReference;
+
+        if (identifier.startsWith("botb ")){
+            log.info("BOTB SEARCH "+identifier.replaceFirst("botb ", ""));
+            newReference = processSearch(identifier.replaceFirst("botb ", ""));
+        } else {
+            newReference = processAsSingleTrack(identifier);
+        }
+
+        if (newReference == null) {
+            return null;
+        }
+        return httpAudioSourceManager.loadItem(manager, newReference);
     }
 
     @Override
@@ -99,6 +115,23 @@ public class BattleOfTheBitsAudioSourceManager implements AudioSourceManager, Ht
     @Override
     public void configureBuilder(Consumer<HttpClientBuilder> configurator) {
         httpInterfaceManager.configureBuilder(configurator);
+    }
+
+    private AudioReference processSearch(String name) {
+        String searchUrl = "https://battleofthebits.org/api/v1/entry/search/"+name.replace(" ","%20");
+
+        try (HttpInterface httpInterface = getHttpInterface()) {
+            JsonBrowser trackData = htmlDataLoader.load(httpInterface, searchUrl);
+
+            if (trackData == null) {
+                throw new FriendlyException("This track is not available", COMMON, null);
+            }
+
+            return loadFromTrackData(trackData.index(0));
+        } catch (IOException e) {
+            throw new FriendlyException("Loading track from botb failed.", SUSPICIOUS, e);
+        }
+
     }
 
     private AudioReference processAsSingleTrack(String url) {

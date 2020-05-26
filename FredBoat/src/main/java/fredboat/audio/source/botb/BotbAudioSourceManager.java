@@ -59,14 +59,13 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
 
     @Override
     public AudioItem loadItem(DefaultAudioPlayerManager manager, AudioReference reference) {
-        String identifier = reference.identifier;
+        //change this later to reimplement whatever the http thing does so I can attach author myself
 
-        log.info("BOTB PLAYER identifier "+identifier);
+        String identifier = reference.identifier;
 
         AudioReference newReference;
 
         if (identifier.startsWith("botb ")){
-            log.info("BOTB SEARCH "+identifier.replaceFirst("botb ", ""));
             newReference = processSearch(identifier.replaceFirst("botb ", ""));
         } else {
             newReference = processAsSingleTrack(identifier);
@@ -133,17 +132,13 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
     }
 
     private AudioReference processAsSingleTrack(String url) {
-        log.info("MATCHING TRACK "+url);
-
         Matcher trackUrlMatcher = trackUrlPattern.matcher(url);
         if (trackUrlMatcher.lookingAt()) {
-            log.info("MATCHES "+url);
             return loadTrack(trackUrlMatcher.replaceFirst(""));
         }
 
         Matcher playerUrlMatcher = playerUrlPattern.matcher(url);
         if (playerUrlMatcher.lookingAt()) {
-            log.info("MATCHES PLAYER "+url);
             return loadTrack(playerUrlMatcher.replaceFirst(""));
         }
 
@@ -151,8 +146,6 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
     }
 
     public AudioReference loadTrack(String trackId) {
-        log.info("LOADING TRACK "+trackId);
-
         String trackInfoUrl = "https://battleofthebits.org/api/v1/entry/load/" + trackId;
 
         try (HttpInterface httpInterface = getHttpInterface()) {

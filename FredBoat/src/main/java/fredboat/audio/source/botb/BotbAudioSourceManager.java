@@ -11,17 +11,19 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.COMMON;
-import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.SUSPICIOUS;
+import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.*;
 
 /**
  * Audio source manager that implements finding SoundCloud tracks based on URL.
@@ -115,9 +117,14 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
     }
 
     private AudioReference processSearch(String name) {
-        String searchUrl = "https://battleofthebits.org/api/v1/entry/search/"+name.replace(" ","%20");
-
         try (HttpInterface httpInterface = getHttpInterface()) {
+            String searchUrl = UriComponentsBuilder
+                    .fromHttpUrl("https://battleofthebits.org/api/v1/entry/search/{query}")
+                    .buildAndExpand(UriUtils.encode(name, "UTF-8") + ".json")
+                    .toUriString();
+
+            log.info("SEARCHING URL "+searchUrl);
+
             JsonBrowser trackData = htmlDataLoader.load(httpInterface, searchUrl);
 
             if (trackData == null) {
@@ -125,10 +132,11 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
             }
 
             return loadFromTrackData(trackData.index(0));
+        } catch (UnsupportedEncodingException e) {
+            throw new FriendlyException("^^ this code is wrong please look at it", FAULT, e);
         } catch (IOException e) {
             throw new FriendlyException("Loading track from botb failed.", SUSPICIOUS, e);
         }
-
     }
 
     private AudioReference processAsSingleTrack(String url) {
@@ -175,7 +183,7 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
 //        return buildTrackFromInfo(info);
     }
 
-    private AudioTrack buildTrackFromInfo(AudioTrackInfo trackInfo) {
-        return new BotbAudioTrack(trackInfo, this);
-    }
+//    private AudioTrack buildTrackFromInfo(AudioTrackInfo trackInfo) {
+//        return new BotbAudioTrack(trackInfo, this);
+//    }
 }

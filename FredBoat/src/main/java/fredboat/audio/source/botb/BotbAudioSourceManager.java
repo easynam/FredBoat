@@ -135,7 +135,7 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
         } catch (UnsupportedEncodingException e) {
             throw new FriendlyException("^^ this code is wrong please look at it", FAULT, e);
         } catch (IOException e) {
-            throw new FriendlyException("Loading track from botb failed.", SUSPICIOUS, e);
+            throw new FriendlyException("Search failed to find any tracks.", COMMON, e);
         }
     }
 

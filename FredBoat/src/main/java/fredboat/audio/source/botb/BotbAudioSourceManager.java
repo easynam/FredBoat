@@ -1,4 +1,4 @@
-package fredboat.audio.source;
+package fredboat.audio.source.botb;
 
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
@@ -7,8 +7,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser;
 import com.sedmelluq.discord.lavaplayer.tools.io.*;
 import com.sedmelluq.discord.lavaplayer.track.*;
-import fredboat.audio.source.botb.BotbAudioTrack;
-import fredboat.audio.source.botb.BotbHtmlDataLoader;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -28,8 +26,8 @@ import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.
 /**
  * Audio source manager that implements finding SoundCloud tracks based on URL.
  */
-public class BattleOfTheBitsAudioSourceManager implements AudioSourceManager, HttpConfigurable {
-    private static final Logger log = LoggerFactory.getLogger(BattleOfTheBitsAudioSourceManager.class);
+public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigurable {
+    private static final Logger log = LoggerFactory.getLogger(BotbAudioSourceManager.class);
 
     private static final String TRACK_URL_REGEX = "^(?:http://|https://|)(?:www\\.|)battleofthebits.org/arena/Entry/[^\\/]+/";
     private static final String PLAYER_URL_REGEX = "^(?:http://|https://|)(?:www\\.|)battleofthebits.org/player/EntryPlay/";
@@ -45,7 +43,7 @@ public class BattleOfTheBitsAudioSourceManager implements AudioSourceManager, Ht
     /**
      * Create an instance.
      */
-    public BattleOfTheBitsAudioSourceManager(
+    public BotbAudioSourceManager(
             BotbHtmlDataLoader htmlDataLoader,
             HttpAudioSourceManager httpAudioSourceManager) {
         this.htmlDataLoader = htmlDataLoader;

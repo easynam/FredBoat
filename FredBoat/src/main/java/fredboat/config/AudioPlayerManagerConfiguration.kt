@@ -44,7 +44,7 @@ import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingIpRoutePlann
 import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv4Block
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block
-import fredboat.audio.source.BattleOfTheBitsAudioSourceManager
+import fredboat.audio.source.botb.BotbAudioSourceManager
 import fredboat.audio.source.PlaylistImportSourceManager
 import fredboat.audio.source.SpotifyPlaylistSourceManager
 import fredboat.audio.source.botb.BotbHtmlDataLoader
@@ -148,7 +148,7 @@ class AudioPlayerManagerConfiguration {
                                          beamAudioSourceManager: BeamAudioSourceManager,
                                          spotifyPlaylistSourceManager: SpotifyPlaylistSourceManager,
                                          localAudioSourceManager: LocalAudioSourceManager,
-                                         botbAudioSourceManager: BattleOfTheBitsAudioSourceManager,
+                                         botbAudioSourceManager: BotbAudioSourceManager,
                                          httpAudioSourceManager: HttpAudioSourceManager): ArrayList<AudioSourceManager> {
         val audioSourceManagers = ArrayList<AudioSourceManager>()
 
@@ -266,7 +266,7 @@ class AudioPlayerManagerConfiguration {
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    fun botbAudioSourceManager() = BattleOfTheBitsAudioSourceManager(BotbHtmlDataLoader(), httpSourceManager())
+    fun botbAudioSourceManager() = BotbAudioSourceManager(BotbHtmlDataLoader(), httpSourceManager())
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

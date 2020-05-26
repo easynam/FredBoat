@@ -2,17 +2,13 @@ package fredboat.audio.source.botb;
 
 import com.sedmelluq.discord.lavaplayer.container.mp3.Mp3AudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface;
 import com.sedmelluq.discord.lavaplayer.tools.io.PersistentHttpStream;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.InternalAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
-import fredboat.audio.source.BattleOfTheBitsAudioSourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +18,13 @@ public class BotbAudioTrack extends DelegatedAudioTrack {
 
     private static final Logger log = LoggerFactory.getLogger(SoundCloudAudioTrack.class);
 
-    private final BattleOfTheBitsAudioSourceManager sourceManager;
+    private final BotbAudioSourceManager sourceManager;
 
     /**
      * @param trackInfo Track info
      * @param sourceManager Source manager which was used to find this track
      */
-    public BotbAudioTrack(AudioTrackInfo trackInfo, BattleOfTheBitsAudioSourceManager sourceManager) {
+    public BotbAudioTrack(AudioTrackInfo trackInfo, BotbAudioSourceManager sourceManager) {
         super(trackInfo);
 
         this.sourceManager = sourceManager;

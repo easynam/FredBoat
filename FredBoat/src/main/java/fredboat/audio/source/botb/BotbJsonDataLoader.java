@@ -1,6 +1,5 @@
 package fredboat.audio.source.botb;
 
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.DataFormatTools;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser;
@@ -18,8 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.SUSPICIOUS;
 
-public class BotbHtmlDataLoader {
-    private static final Logger log = LoggerFactory.getLogger(BotbHtmlDataLoader.class);
+public class BotbJsonDataLoader {
+    private static final Logger log = LoggerFactory.getLogger(BotbJsonDataLoader.class);
 
     public JsonBrowser load(HttpInterface httpInterface, String url) throws IOException {
         try (CloseableHttpResponse response = httpInterface.execute(new HttpGet(url))) {

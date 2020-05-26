@@ -47,7 +47,7 @@ import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block
 import fredboat.audio.source.botb.BotbAudioSourceManager
 import fredboat.audio.source.PlaylistImportSourceManager
 import fredboat.audio.source.SpotifyPlaylistSourceManager
-import fredboat.audio.source.botb.BotbHtmlDataLoader
+import fredboat.audio.source.botb.BotbJsonDataLoader
 import fredboat.config.property.AppConfig
 import fredboat.config.property.AudioSourcesConfig
 import fredboat.util.rest.SpotifyAPIWrapper
@@ -266,7 +266,7 @@ class AudioPlayerManagerConfiguration {
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    fun botbAudioSourceManager() = BotbAudioSourceManager(BotbHtmlDataLoader(), httpSourceManager())
+    fun botbAudioSourceManager() = BotbAudioSourceManager(BotbJsonDataLoader(), httpSourceManager())
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

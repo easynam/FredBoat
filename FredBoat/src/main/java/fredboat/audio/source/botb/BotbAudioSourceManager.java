@@ -35,7 +35,7 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
     private static final Pattern trackUrlPattern = Pattern.compile(TRACK_URL_REGEX);
     private static final Pattern playerUrlPattern = Pattern.compile(PLAYER_URL_REGEX);
 
-    private final BotbHtmlDataLoader htmlDataLoader;
+    private final BotbJsonDataLoader htmlDataLoader;
     private final HttpInterfaceManager httpInterfaceManager;
 
     private final HttpAudioSourceManager httpAudioSourceManager;
@@ -44,7 +44,7 @@ public class BotbAudioSourceManager implements AudioSourceManager, HttpConfigura
      * Create an instance.
      */
     public BotbAudioSourceManager(
-            BotbHtmlDataLoader htmlDataLoader,
+            BotbJsonDataLoader htmlDataLoader,
             HttpAudioSourceManager httpAudioSourceManager) {
         this.htmlDataLoader = htmlDataLoader;
         this.httpAudioSourceManager = httpAudioSourceManager;

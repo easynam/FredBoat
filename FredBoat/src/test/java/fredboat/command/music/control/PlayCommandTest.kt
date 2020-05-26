@@ -26,6 +26,7 @@ internal class PlayCommandTest(
     companion object {
         const val url = "https://www.youtube.com/watch?v=8EdW28B-In4"
         const val url2 = "https://www.youtube.com/watch?v=pqUuvRkFfLI"
+        const val botbUrl = "https://battleofthebits.org/arena/Entry/Clarinet+Quartet/34099/"
     }
 
     @Test
@@ -84,6 +85,20 @@ internal class PlayCommandTest(
             delayUntil { players.getOrCreate(guild).remainingTracks.size == 2 }
             assertNotNull(players.getOrCreate(guild).remainingTracks[1])
             assertEquals(url2, players.getOrCreate(guild).remainingTracks[1].track.info?.uri)
+        }
+    }
+
+    @Test
+    fun playBotb(players: PlayerRegistry) {
+        SentinelState.joinChannel(channel = Raws.musicChannel)
+        testCommand(";;play $botbUrl") {
+            assertRequest<AudioQueueRequest> { it.channel == Raws.musicChannel.id }
+            assertReply { it.contains("Clarinet Quartet") && it.contains("will now play") }
+            assertNotNull(players.getExisting(guild))
+
+            delayUntil { players.getOrCreate(guild).playingTrack != null }
+            assertNotNull(players.getOrCreate(guild).playingTrack)
+            assertEquals(url, players.getOrCreate(guild).playingTrack?.track?.info?.uri)
         }
     }
 

@@ -44,8 +44,10 @@ import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingIpRoutePlann
 import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv4Block
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block
+import fredboat.audio.source.BattleOfTheBitsAudioSourceManager
 import fredboat.audio.source.PlaylistImportSourceManager
 import fredboat.audio.source.SpotifyPlaylistSourceManager
+import fredboat.audio.source.botb.BotbHtmlDataLoader
 import fredboat.config.property.AppConfig
 import fredboat.config.property.AudioSourcesConfig
 import fredboat.util.rest.SpotifyAPIWrapper
@@ -146,6 +148,7 @@ class AudioPlayerManagerConfiguration {
                                          beamAudioSourceManager: BeamAudioSourceManager,
                                          spotifyPlaylistSourceManager: SpotifyPlaylistSourceManager,
                                          localAudioSourceManager: LocalAudioSourceManager,
+                                         botbAudioSourceManager: BattleOfTheBitsAudioSourceManager,
                                          httpAudioSourceManager: HttpAudioSourceManager): ArrayList<AudioSourceManager> {
         val audioSourceManagers = ArrayList<AudioSourceManager>()
 
@@ -173,6 +176,7 @@ class AudioPlayerManagerConfiguration {
         if (audioSourcesConfig.isLocalEnabled) {
             audioSourceManagers.add(localAudioSourceManager)
         }
+        audioSourceManagers.add(botbAudioSourceManager)
         if (audioSourcesConfig.isHttpEnabled) {
             //add new source managers above the HttpAudio one, because it will either eat your request or throw an exception
             //so you will never reach a source manager below it
@@ -259,6 +263,10 @@ class AudioPlayerManagerConfiguration {
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     fun localAudioSourceManager() = LocalAudioSourceManager()
+
+    @Bean(destroyMethod = "")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    fun botbAudioSourceManager() = BattleOfTheBitsAudioSourceManager(BotbHtmlDataLoader(), httpSourceManager())
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

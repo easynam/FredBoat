@@ -1,13 +1,14 @@
 package fredboat.audio.source.botb;
 
-import com.sedmelluq.discord.lavaplayer.container.mp3.Mp3AudioTrack;
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerDescriptor;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface;
 import com.sedmelluq.discord.lavaplayer.tools.io.PersistentHttpStream;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.InternalAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,35 +16,45 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 
 public class BotbAudioTrack extends DelegatedAudioTrack {
+    private static final Logger log = LoggerFactory.getLogger(HttpAudioTrack.class);
 
-    private static final Logger log = LoggerFactory.getLogger(SoundCloudAudioTrack.class);
-
+    private final MediaContainerDescriptor containerTrackFactory;
     private final BotbAudioSourceManager sourceManager;
 
     /**
      * @param trackInfo Track info
-     * @param sourceManager Source manager which was used to find this track
+     * @param containerTrackFactory Container track factory - contains the probe with its parameters.
+     * @param sourceManager Source manager used to load this track
      */
-    public BotbAudioTrack(AudioTrackInfo trackInfo, BotbAudioSourceManager sourceManager) {
+    public BotbAudioTrack(AudioTrackInfo trackInfo, MediaContainerDescriptor containerTrackFactory,
+                          BotbAudioSourceManager sourceManager) {
         super(trackInfo);
 
+        this.containerTrackFactory = containerTrackFactory;
         this.sourceManager = sourceManager;
     }
 
+    /**
+     * @return The media probe which handles creating a container-specific delegated track for this track.
+     */
+    public MediaContainerDescriptor getContainerTrackFactory() {
+        return containerTrackFactory;
+    }
+
     @Override
-    public void process(LocalAudioTrackExecutor executor) throws Exception {
+    public void process(LocalAudioTrackExecutor localExecutor) throws Exception {
         try (HttpInterface httpInterface = sourceManager.getHttpInterface()) {
             log.debug("Starting http track from URL: {}", trackInfo.identifier);
 
-            try (PersistentHttpStream stream = new PersistentHttpStream(httpInterface, new URI(trackInfo.identifier), Long.MAX_VALUE)) {
-                processDelegate(new Mp3AudioTrack(trackInfo, stream), executor);
+            try (PersistentHttpStream inputStream = new PersistentHttpStream(httpInterface, new URI(trackInfo.identifier), Long.MAX_VALUE)) {
+                processDelegate((InternalAudioTrack) containerTrackFactory.createTrack(trackInfo, inputStream), localExecutor);
             }
         }
     }
 
     @Override
     protected AudioTrack makeShallowClone() {
-        return new BotbAudioTrack(trackInfo, sourceManager);
+        return new BotbAudioTrack(trackInfo, containerTrackFactory, sourceManager);
     }
 
     @Override

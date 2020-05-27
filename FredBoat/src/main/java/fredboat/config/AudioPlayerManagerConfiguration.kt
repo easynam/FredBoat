@@ -24,6 +24,7 @@
 
 package fredboat.config
 
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry
 import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
@@ -266,7 +267,7 @@ class AudioPlayerManagerConfiguration {
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    fun botbAudioSourceManager() = BotbAudioSourceManager(BotbJsonDataLoader(), httpSourceManager())
+    fun botbAudioSourceManager() = BotbAudioSourceManager(BotbJsonDataLoader(), MediaContainerRegistry.DEFAULT_REGISTRY)
 
     @Bean(destroyMethod = "")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

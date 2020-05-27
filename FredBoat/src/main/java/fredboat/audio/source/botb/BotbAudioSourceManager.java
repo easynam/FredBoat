@@ -3,6 +3,7 @@ package fredboat.audio.source.botb;
 import com.sedmelluq.discord.lavaplayer.container.*;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.ProbingAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser;
 import com.sedmelluq.discord.lavaplayer.tools.io.*;
@@ -60,7 +61,7 @@ public class BotbAudioSourceManager extends ProbingAudioSourceManager implements
 
     @Override
     public String getSourceName() {
-        return "botb";
+        return "http";
     }
 
     @Override
@@ -96,8 +97,8 @@ public class BotbAudioSourceManager extends ProbingAudioSourceManager implements
     }
 
     @Override
-    public void encodeTrack(AudioTrack track, DataOutput output) {
-        // No extra information to save
+    public void encodeTrack(AudioTrack track, DataOutput output) throws IOException {
+        encodeTrackFactory(((BotbAudioTrack) track).getContainerTrackFactory(), output);
     }
 
     @Override
